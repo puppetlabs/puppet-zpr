@@ -8,7 +8,7 @@ class zpr (
   $storage            = undef,
   $worker_tag         = undef,
   $readonly_tag       = undef,
-  $env_tag            = undef,
+  $env_tag            = 'default_env_tag',
   $backup_dir         = undef,
   $pub_key            = undef,
   $sanity_check       = undef,
