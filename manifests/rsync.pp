@@ -16,7 +16,7 @@ define zpr::rsync (
   $key_name       = 'id_rsa',
   $ssh_options    = ['SendEnv zpr_rsync_cmd', 'BatchMode yes'],
   $worker_tag     = undef,
-  $env_tag        = undef,
+  $env_tag        = 'default',
   $exclude        = undef
 ) {
 
@@ -46,10 +46,10 @@ define zpr::rsync (
       }
     }
 
-    if $env_tag {
-      $_env_tag = $env_tag
-    } else {
+    if $env_tag == 'default' {
       $_env_tag = $::zpr::params::env_tag
+    } else {
+      $_env_tag = $env_tag
     }
 
     $rsync_cmd = [

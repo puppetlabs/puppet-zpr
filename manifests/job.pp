@@ -193,7 +193,7 @@ define zpr::job (
   $target                = undef,
   $rsync_options         = undef,
   $exclude               = undef,
-  $env_tag               = undef,
+  $env_tag               = 'default',
   $anon_user_id          = '50555',
   $nosub                 = true,
   $prepend_title         = false
@@ -205,10 +205,10 @@ define zpr::job (
     $utitle = $title
   }
 
-  if $env_tag {
-    $_env_tag = $env_tag
-  } else {
+  if $env_tag == 'default' {
     $_env_tag = $::zpr::params::env_tag
+  } else {
+    $_env_tag = $env_tag
   }
 
   $vol_name  = "${zpool}/${utitle}"
