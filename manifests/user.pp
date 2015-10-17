@@ -29,6 +29,10 @@ class zpr::user (
     '/usr/bin/.*',
   ]
 
+  if ! $worker_tag {
+    fail( '$worker_tag must be set' )
+  }
+
   if $::sshecdsakey {
     $ssh_key_concat = [
       "${::fqdn},${::primary_ip}",
@@ -147,7 +151,7 @@ class zpr::user (
   @@concat::fragment { "${::certname}_ecdsakey":
     target  => $known_hosts,
     content => join( $ssh_key_concat, ' ' ),
-    tag     => [ $worker_tag, 'zpr_sshkey' ],
+    tag     => [ $worker_tag, 'zpr_sshkey' ]
   }
 
   Ssh_authorized_key <<| tag == $worker_tag and tag == 'zpr_ssh_authorized_key' |>> {
