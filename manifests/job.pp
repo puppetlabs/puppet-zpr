@@ -53,7 +53,7 @@
 # Hostname of worker to run rsync jobs. Useful if there are more than one. Default: worker.
 #
 # readonly_tag
-# Hostname of offsite worker. Useful if there are more than one. Default: worker.
+# Hostname of offsite worker. Useful if there are more than one. Default: readonly.
 #
 # snapshot
 # Optionally disable snapshot creation. Default: true.
@@ -213,8 +213,12 @@ define zpr::job (
     fail("Backup resource ${title} cannot contain whitespace or special characters")
   }
 
-  $storage_tags = [ $_env_tag, $storage ]
-  $readonly_tags = [ $_env_tag, $worker_tag, 'zpr_vol' ]
+  if ! $storage or ! $worker_tag {
+    fail( '$storage and $worker_tag must be set' )
+  }
+
+  $storage_tags  = any2array($storage)
+  $readonly_tags = [ $worker_tag, 'zpr_vol' ]
 
   if $snapshot {
     @@zfs::snapshot { $utitle:
@@ -260,7 +264,7 @@ define zpr::job (
         key_id     => $gpg_key_id,
         keep       => $keep_s3,
         full_every => $full_every,
-        tag        => [ $_env_tag, $readonly_tag, 'zpr_duplicity' ]
+        tag        => [ $readonly_tag, 'zpr_duplicity' ]
       }
       $ship_offsite_tags = concat($readonly_tags, $readonly_tag)
     }
@@ -296,7 +300,7 @@ define zpr::job (
       minute        => $rsync_minute,
       exclude       => $exclude,
       rsync_options => $rsync_options,
-      worker_tag    => $worker_tag,
+      worker_tag    => concat(any2array($worker_tag), 'zpr_rsync'),
     }
   }
 

@@ -1,5 +1,6 @@
 # rsync job designed for use with zpr
 define zpr::rsync (
+  $worker_tag,
   $source_url,
   $files,
   $dest_folder    = "/srv/backup/${title}",
@@ -15,7 +16,6 @@ define zpr::rsync (
   $minute         = '15',
   $key_name       = 'id_rsa',
   $ssh_options    = ['SendEnv zpr_rsync_cmd', 'BatchMode yes'],
-  $worker_tag     = undef,
   $env_tag        = undef,
   $exclude        = undef
 ) {
@@ -27,6 +27,10 @@ define zpr::rsync (
   $ssh_options_a      = any2array($ssh_options)
   $ssh_options_j      = join($ssh_options_a, "' -o '")
   $ssh_options_f      = "-o '${ssh_options_j}'"
+
+  if ! $worker_tag {
+    fail( '$worker_tag must be set' )
+  }
 
   if $files != '' or $files {
     if ( is_array($files) ) {
@@ -62,7 +66,7 @@ define zpr::rsync (
       user    => $user,
       hour    => $hour,
       minute  => $minute,
-      tag     => [ $worker_tag, 'zpr_rsync'],
+      tag     => [ $worker_tag, 'zpr_rsync']
     }
 
     @@file { "${permitted_commands}/${title}":
