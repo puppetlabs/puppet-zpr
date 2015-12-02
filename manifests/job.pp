@@ -172,7 +172,7 @@ define zpr::job (
   $backup_dir            = '/srv/backup',
   $zpr_home              = '/var/lib/zpr',
   $quota                 = '100G',
-  $security              = 'none',
+  $security              = 'none', #To be removed
   $hour                  = '1',
   $minute                = fqdn_rand(59),
   $rsync_hour            = $hour,
@@ -189,13 +189,13 @@ define zpr::job (
   $allow_ip_read         = undef,
   $allow_ip_read_default = undef,
   $allow_ip_write        = undef,
-  $full_share            = undef,
+  $full_share            = undef, #To be removed
   $target                = undef,
   $rsync_options         = undef,
   $exclude               = undef,
   $env_tag               = undef,
   $anon_user_id          = '50555',
-  $nosub                 = true,
+  $nosub                 = 'on',
   $prepend_title         = false
 ) {
 
@@ -325,15 +325,12 @@ define zpr::job (
       $allow_read_ips = undef
     }
 
-    @@zfs::share { $utitle:
-      allow_ip_read  => $allow_read_ips,
-      allow_ip_write => $allow_ip_write,
-      security       => $security,
-      zpool          => $zpool,
-      full_share     => $full_share,
-      anon_user_id   => $anon_user_id,
-      nosub          => $nosub,
-      tag            => concat($storage_tags, 'zpr_share')
+    @@zfs_share { "${zpool}/${utitle}":
+      sec_none_ro => $allow_read_ips,
+      sec_none_rw => $allow_ip_write,
+      anon        => $anon_user_id,
+      nosub       => $nosub,
+      tag         => concat($storage_tags, 'zpr_share')
     }
   }
 }
