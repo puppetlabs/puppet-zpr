@@ -102,7 +102,7 @@ class zpr::user (
       'test_run() {',
       'crontab -l |',
       'grep -v -E "Puppet Name|HEADER" |',
-      "cut -d' ' -f 6-' |",
+      "cut -d' ' -f 6- |",
       'grep -E "${1} \"" |',
       'source /dev/stdin }'
     ]
