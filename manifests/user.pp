@@ -99,17 +99,18 @@ class zpr::user (
     }
 
     $run_job = [
-      'test_run() {',
-      'crontab -l |',
-      'grep -v -E "Puppet Name|HEADER" |',
-      "cut -d' ' -f 6- |",
-      'grep -E "${1} \"" |',
-      'source /dev/stdin }'
+      'test_job() {',
+      'crontab -l | \\',
+      'grep -v -E "Puppet Name|HEADER" | \\',
+      "cut -d' ' -f 6- | \\",
+      'grep -E "${1} \"" | \\',
+      'source /dev/stdin',
+      '}'
     ]
 
     file_line { 'run_zpr_job':
       ensure => present,
-      line   => join($run_job, ' '),
+      line   => join($run_job, "\n"),
       path   => "${home}/.profile"
     }
   }
