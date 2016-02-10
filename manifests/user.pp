@@ -97,6 +97,21 @@ class zpr::user (
       content => join( $known_hosts_header, "\n" ),
       order   => 0
     }
+
+    $run_job = [
+      'test_run() {',
+      'crontab -l |',
+      'grep -v -E "Puppet Name|HEADER" |',
+      "cut -d' ' -f 6-' |",
+      'grep -E "${1} \"" |',
+      'source /dev/stdin }'
+    ]
+
+    file_line { 'run_zpr_job':
+      ensure => present,
+      line   => join($run_job, ' '),
+      path   => "${home}/.profile"
+    }
   }
   elsif $::hostname == $readonly_tag {
     $user_shell = '/bin/bash'
