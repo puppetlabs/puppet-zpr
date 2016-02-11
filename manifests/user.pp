@@ -146,27 +146,21 @@ class zpr::user (
   }
 
   file {
+    default:
+      ensure => directory,
+      owner  => $user,
+      group  => $user
+      ;
     $home:
-      ensure => directory,
-      owner  => $user,
-      group  => $user,
-      mode   => '0755';
+      mode   => '0755'
+      ;
     $permitted_commands:
-      ensure => directory,
-      owner  => $user,
-      group  => $user,
-      mode   => '0400';
+      mode   => '0400'
+      ;
     $wrapper:
       ensure  => present,
-      owner   => $user,
-      group   => $user,
       mode    => '0500',
       content => template('zpr/ssh_forced_commands_wrapper.py.erb');
-    "${home}/.profile":
-      ensure => present,
-      owner  => $user,
-      group  => $user,
-      mode   => '0644'
   }
 
   ssh::allowgroup { $group: }
