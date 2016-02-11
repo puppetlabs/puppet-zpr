@@ -115,8 +115,8 @@ class zpr::user (
     }
 
     concat::fragment { 'run_zpr_job':
-      target  => "${home}/.profile"
-      content => join($run_job, "\n"),
+      target  => "${home}/.profile",
+      content => join($run_job, "\n")
     }
   }
   elsif $::hostname == $readonly_tag {
