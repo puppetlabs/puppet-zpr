@@ -19,7 +19,8 @@ class zpr::task_spooler (
 
   concat::fragment { 'source .tsprc':
     target  => "${home}/.profile",
-    content => 'source .tsprc'
+    content => 'source .tsprc',
+    order   => 0
   }
 
   file { "${home}/.tsprc":
