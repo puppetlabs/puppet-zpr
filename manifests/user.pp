@@ -108,11 +108,15 @@ class zpr::user (
       '}'
     ]
 
-    file_line { 'run_zpr_job':
-      ensure   => present,
-      line     => join($run_job, "\n"),
-      multiple => true,
-      path     => "${home}/.profile"
+    concat { "${home}/.profile":
+      owner => $user,
+      group => $group,
+      mode  => '0600'
+    }
+
+    concat::fragment { 'run_zpr_job':
+      target  => "${home}/.profile"
+      content => join($run_job, "\n"),
     }
   }
   elsif $::hostname == $readonly_tag {

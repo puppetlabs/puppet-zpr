@@ -17,10 +17,9 @@ class zpr::task_spooler (
     ensure => $ensure
   }
 
-  file_line { ". ${home}/.tsprc":
-    ensure => present,
-    line   => 'source .tsprc',
-    path   => "${home}/.profile"
+  concat::fragment { 'source .tsprc':
+    target  => "${home}/.profile",
+    content => 'source .tsprc'
   }
 
   file { "${home}/.tsprc":
