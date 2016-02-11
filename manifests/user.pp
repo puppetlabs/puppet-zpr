@@ -104,7 +104,7 @@ class zpr::user (
       'grep -v -E "Puppet Name|HEADER" | \\',
       "cut -d' ' -f 6- | \\",
       'grep -E "${1} \"" | \\',
-      'source /dev/stdin \\',
+      'source /dev/stdin',
       '}'
     ]
 
