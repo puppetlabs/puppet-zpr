@@ -99,19 +99,29 @@ class zpr::user (
     }
 
     $run_job = [
-      'test_job() {',
-      'crontab -l | \\',
-      'grep -v -E "Puppet Name|HEADER" | \\',
-      "cut -d' ' -f 6- | \\",
-      'grep -E "${1} \"" | \\',
-      'source /dev/stdin',
-      '}'
+      'crontab -l |',
+      'grep -v -E "Puppet Name|HEADER" |',
+      "cut -d' ' -f 6- |",
+      'grep -E "${1} \"" |',
+      'source /dev/stdin'
     ]
 
-    file_line { 'run_zpr_job':
-      ensure => present,
-      line   => join($run_job, "\n"),
-      path   => "${home}/.profile"
+    file_line {
+      default:
+        ensure => present,
+        path   => "${home}/.profile",
+        ;
+      'run_job':
+        line  => 'run_job() {',
+        order => 3,
+        ;
+      'run_job_c':
+        line  => join($run_job, ' '),
+        order => 4,
+        ;
+      'run_job_e':
+        line  => '},'
+        order => 5,
     }
   }
   elsif $::hostname == $readonly_tag {
