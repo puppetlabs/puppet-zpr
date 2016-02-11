@@ -109,10 +109,10 @@ class zpr::user (
     ]
 
     file_line { 'run_zpr_job':
-      ensure         => present,
-      line           => join($run_job, "\n"),
-      multiple_lines => true,
-      path           => "${home}/.profile"
+      ensure   => present,
+      line     => join($run_job, "\n"),
+      multiple => true,
+      path     => "${home}/.profile"
     }
   }
   elsif $::hostname == $readonly_tag {
