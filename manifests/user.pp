@@ -99,7 +99,7 @@ class zpr::user (
     }
 
     $run_job = [
-      'run_job() {',
+      'run_backup_job() {',
       'crontab -l | \\',
       'grep -v -E "Puppet Name|HEADER" | \\',
       "cut -d' ' -f 6- | \\",
