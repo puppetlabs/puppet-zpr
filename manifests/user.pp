@@ -98,26 +98,11 @@ class zpr::user (
       order   => 0
     }
 
-    $run_job = [
-      'run_backup_job() {',
-      'crontab -l | \\',
-      'grep -v -E "Puppet Name|HEADER" | \\',
-      "cut -d' ' -f 6- | \\",
-      'grep -E "${1} \"" | \\',
-      'source /dev/stdin',
-      '}'
-    ]
-
-    concat { "${home}/.profile":
-      owner => $user,
-      group => $group,
-      mode  => '0600'
-    }
-
-    concat::fragment { 'run_zpr_job':
-      target  => "${home}/.profile",
-      content => join($run_job, "\n"),
-      order   => 2
+    file { "${home}/.profile":
+      owner  => $user,
+      group  => $group,
+      mode   => '0600',
+      source => 'puppet:///modules/zpr/profile'
     }
   }
   elsif $::hostname == $readonly_tag {

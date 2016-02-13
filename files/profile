@@ -1,0 +1,9 @@
+source .tsprc
+
+run_backup_job() {
+crontab -l | \
+grep -v -E "Puppet Name|HEADER" | \
+cut -d' ' -f 6- | \
+grep -E "${1} \"" | \
+source /dev/stdin
+}

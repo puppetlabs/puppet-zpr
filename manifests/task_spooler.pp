@@ -17,12 +17,6 @@ class zpr::task_spooler (
     ensure => $ensure
   }
 
-  concat::fragment { 'source .tsprc':
-    target  => "${home}/.profile",
-    content => "source .tsprc\n",
-    order   => 0
-  }
-
   file { "${home}/.tsprc":
       ensure  => present,
       owner   => $user,
