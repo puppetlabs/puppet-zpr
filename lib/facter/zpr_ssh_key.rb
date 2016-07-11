@@ -1,5 +1,7 @@
 Facter.add(:zpr_ssh_pubkey) do
 
+  confine :kernel => ['Linux', 'SunOS']
+
   require 'etc'
 
   setcode do
