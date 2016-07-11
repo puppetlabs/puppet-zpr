@@ -30,4 +30,21 @@ class zpr::task_spooler (
       mode    => '0500',
       content => join( $tsp_options, "\n" )
   }
+
+  file { "${home}/check_slots":
+    owner   => $user,
+    group   => $user,
+    mode    => '0500',
+    content => join([
+      '#!/usr/bin/env bash',
+      '[[ $(tsp -S) -eq $1 ]]'
+    ], "\n")
+  }
+
+  exec { 'set_slots':
+    path    => '/bin:/usr/bin',
+    command => "tsp -S ${slots}",
+    unless  => "${home}/check_slots ${slots}",
+    user    => $user
+  }
 }
