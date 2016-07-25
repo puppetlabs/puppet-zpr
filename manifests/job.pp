@@ -112,7 +112,7 @@
 # s3_target
 # Target s3 bucket for offsite backups
 #
-# gpg_key_id
+# gpg_key_id toremove
 # GPG key ID for encrypting duplicity backups
 #
 # compression
@@ -184,7 +184,7 @@ define zpr::job (
   $snapshot_r_hour       = $hour,
   $snapshot_r_minute     = $minute,
   $s3_target             = undef,
-  $gpg_key_id            = undef,
+  $gpg_key_id            = undef, #toremove
   $compression           = undef,
   $allow_ip_read         = undef,
   $allow_ip_read_default = undef,
