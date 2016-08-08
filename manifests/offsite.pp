@@ -6,8 +6,9 @@ class zpr::offsite (
   include zpr::user
   include zpr::backup_dir
   include zpr::task_spooler
-  include zpr::lockfile_progs
   include zpr::gpg
+  include zpr::offsite_config
+  include zpr::duplicity_runner
 
   File  <<| tag == $readonly_tag and tag == 'zpr_vol' |>>
   Mount <<| tag == $readonly_tag and tag == 'zpr_vol' |>> {

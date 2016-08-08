@@ -28,13 +28,14 @@ class zpr::params inherits zpr{
   $maxfinished       = pick($globals_maxfinished, '1500')
 
   # AWS access keys
-  $aws_key_file   = pick($globals_aws_key_file, '.aws')
-  $aws_access_key = $globals_aws_access_key
-  $aws_secret_key = $globals_aws_secret_key
+  $offsite_config_file = pick($globals_offsite_config_file, '.offsite_config')
+  $aws_access_key      = $globals_aws_access_key
+  $aws_secret_key      = $globals_aws_secret_key
 
   # GPG key data
   $gpg_passphrase = $globals_gpg_passphrase
   $gpg_key_grip   = $globals_gpg_key_grip
+  $gpg_key_id     = $globals_gpg_key_id
   $gpg_cache_ttl  = pick($globals_gpg_cache_ttl, '864000')
   $gpg_max_ttl    = pick($globals_gpg_max_ttl, $gpg_cache_ttl)
 }

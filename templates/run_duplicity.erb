@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -e
+
+source ${HOME}/.gpg-agent-info
+source ${HOME}/<%= @offsite_config_file %>
+export GPG_AGENT_INFO
+key_id=<%= @gpg_key_id %>
+sign_key=<%= @signing_key %>
+source_files=$1
+target=$2
+full_every=$3
+remove_older_than=$4
+maintenance_mode=${HOME}/.maintenance_mode
+check_mount=$(stat -f -L -c %T ${source_files})
+
+duplicity_backup() {
+  /usr/bin/duplicity --encrypt-key ${key_id} --sign-key ${sign_key} --use-agent --full-if-older-than ${full_every} ${source_files} ${target}
+}
+
+duplicity_cleanup() {
+  /usr/bin/duplicity --encrypt-key ${key_id} --sign-key ${key_id} --use-agent remove-older-than ${remove_older_than} --force ${target}
+}
+
+check_maintenance_mode() {
+  if [[ -e $maintenance_mode ]]
+  then
+    >&2 echo "System is in maintenance mode"
+    exit 4
+  fi
+}
+
+path_is_nfs() {
+  if [[ $check_mount != 'nfs' ]]
+  then
+    >&2 echo "Requested volume is not mounted"
+    exit 2
+  fi
+}
+
+main() {
+  check_maintenance_mode
+  path_is_nfs
+  duplicity_backup
+  duplicity_cleanup
+}
+
+main

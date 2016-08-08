@@ -54,7 +54,7 @@ zpr::job { 'my-backup':
 - zpr::rsync_cmd
 - zpr::duplicity
 - zpr::user
-- zpr::aws
+- zpr::offsite_config
 - zpr::task_spooler
 
 ### Parameters
@@ -96,8 +96,8 @@ Path to permitted commands directory. Default is "${home}/.ssh/permitted_command
 Name of key if setting manually. Default is "${pub_key}_default"
 #### `tsp_pkg_name`
 Name of tsp pkg. Default is 'task-spooler'
-#### `aws_key_file`
-Title of file to store AWS credentials. Default is '.aws'
+#### `offsite_config_file`
+Title of file to store offsite worker credentials. Default is '.offsite_config'
 #### `aws_access_key`
 AWS access key for offsite backups
 #### `aws_secret_key`
