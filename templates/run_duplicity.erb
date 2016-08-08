@@ -14,7 +14,7 @@ maintenance_mode=${HOME}/.maintenance_mode
 check_mount=$(stat -f -L -c %T ${source_files})
 
 duplicity_backup() {
-  /usr/bin/duplicity --encrypt-key ${key_id} --sign-key ${sign_key} --use-agent --full-if-older-than ${full_every} ${source_files} ${target}
+  /usr/bin/duplicity --encrypt-key ${key_id} --sign-key ${sign_key} --full-if-older-than ${full_every} ${source_files} ${target}
 }
 
 duplicity_cleanup() {
