@@ -1,6 +1,6 @@
 # A class to collect tasks to orchestrate zpr backup jobs
 class zpr::worker (
-  $worker_tag = $zpr::params::worker_tag
+  $worker_tag = $::zpr::params::worker_tag
 ) inherits zpr::params {
 
   class { 'zpr::user': source_user => true }

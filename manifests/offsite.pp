@@ -1,6 +1,6 @@
 # A class to mount nfs volumes read-only for exporting as backups
 class zpr::offsite (
-  $readonly_tag = $zpr::params::readonly_tag
+  $readonly_tag = $::zpr::params::readonly_tag
 ) inherits zpr::params {
 
   include zpr::user
