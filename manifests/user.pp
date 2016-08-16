@@ -97,9 +97,17 @@ class zpr::user (
       content => join( $known_hosts_header, "\n" ),
       order   => 0
     }
+
+    sudo::entry { "${user}_mount":
+      entry => "${user} ALL=(ALL) NOPASSWD:/bin/mount,/bin/umount"
+    }
   }
   elsif $::hostname == $readonly_tag {
     $user_shell = '/bin/bash'
+
+    sudo::entry { "${user}_mount":
+      entry => "${user} ALL=(ALL) NOPASSWD:/bin/mount,/bin/umount"
+    }
   }
   else {
     $user_shell = '/bin/sh'

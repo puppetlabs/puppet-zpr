@@ -11,7 +11,6 @@ target=$2
 full_every=$3
 remove_older_than=$4
 maintenance_mode=${HOME}/.maintenance_mode
-check_mount=$(stat -f -L -c %T ${source_files})
 
 duplicity_backup() {
   /usr/bin/duplicity --encrypt-key ${key_id} --sign-key ${sign_key} --full-if-older-than ${full_every} ${source_files} ${target}
@@ -30,18 +29,48 @@ check_maintenance_mode() {
 }
 
 path_is_nfs() {
-  if [[ $check_mount != 'nfs' ]]
+  check_nfs_mount=$(stat -f -L -c %T ${source_files})
+  if [[ $check_nfs_mount != 'nfs' ]]
   then
     >&2 echo "Requested volume is not mounted"
     exit 2
   fi
 }
 
+mount_volume() {
+  check_mount=$(sudo /bin/mount ${source_files} > /dev/null 2>&1 ; echo $?)
+  if [[ $check_mount -eq 32 ]]
+  then
+    >&2 echo "Requested volume is already mounted"
+  elif [[ $check_mount -ne 0 ]]
+  then
+    >&2 echo "Cannot mount volume"
+    exit 3
+  fi
+}
+
+unmount_volume() {
+  >&2 sudo /bin/umount ${source_files} > /dev/null 2>&1
+}
+
+check_tsp() {
+  check_tsp=$(tsp | grep 'running' | grep ${source_files} > /dev/null 2>&1 ; echo $?)
+  if [[ $check_tsp -eq 0 ]]
+  then
+  exit 1
+  fi
+}
+
 main() {
   check_maintenance_mode
+  check_tsp
+  mount_volume
   path_is_nfs
   duplicity_backup
   duplicity_cleanup
+  unmount_volume
 }
+
+trap "unmount_volume ; exit 255" SIGINT SIGQUIT SIGTERM EXIT
 
 main
