@@ -97,12 +97,24 @@ class zpr::user (
       content => join( $known_hosts_header, "\n" ),
       order   => 0
     }
+
+    sudo::entry { "${user}_sudo":
+      entry => "${user} ALL=(ALL) NOPASSWD:/usr/bin/rsync,/bin/mount,/bin/umount"
+    }
   }
   elsif $::hostname == $readonly_tag {
     $user_shell = '/bin/bash'
+
+    sudo::entry { "${user}_sudo":
+      entry => "${user} ALL=(ALL) NOPASSWD:/usr/bin/rsync,/bin/mount,/bin/umount"
+    }
   }
   else {
     $user_shell = '/bin/sh'
+
+    sudo::entry { "${user}_rsync":
+      entry => "${user} ALL=(ALL) NOPASSWD:/usr/bin/rsync"
+    }
 
     zpr::generate_ssh_key { $user:
       home => $home,
@@ -149,9 +161,6 @@ class zpr::user (
   }
 
   ssh::allowgroup { $group: }
-  sudo::entry { "${user}_rsync":
-    entry => "${user} ALL=(ALL) NOPASSWD:/usr/bin/rsync"
-  }
 
   @@concat::fragment { "${::certname}_ecdsakey":
     target  => $known_hosts,

@@ -163,7 +163,6 @@ define zpr::job (
   $mount_vol             = true,
   $share_nfs             = 'on',
   $files_source          = $::fqdn,
-  $worker_tag            = 'worker',
   $readonly_tag          = 'readonly',
   $snapshot              = 'on',
   $keep                  = '15', # 14 snapshots
@@ -183,6 +182,7 @@ define zpr::job (
   $snapshot_minute       = $minute,
   $snapshot_r_hour       = $hour,
   $snapshot_r_minute     = $minute,
+  $worker_tag            = undef,
   $s3_target             = undef,
   $gpg_key_id            = undef, #toremove
   $compression           = undef,
@@ -281,8 +281,7 @@ define zpr::job (
     }
 
     @@mount { "${backup_dir}/${utitle}":
-      ensure  => mounted,
-      atboot  => true,
+      ensure  => present,
       fstype  => 'nfs',
       target  => '/etc/fstab',
       device  => "${storage}:/${vol_name}",
