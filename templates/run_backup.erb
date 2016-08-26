@@ -71,6 +71,7 @@ check_if_exit_3() {
   if [[ $? -ne 3 ]]
   then
     remove_lock
+    unmount_volume
   fi
 }
 
