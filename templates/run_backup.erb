@@ -82,8 +82,6 @@ main() {
   path_is_nfs
   check_lockfile
   run_cmd
-  remove_lock
-  unmount_volume
 }
 
 trap "remove_lock && unmount_volume ; exit 255" SIGINT SIGQUIT SIGTERM
